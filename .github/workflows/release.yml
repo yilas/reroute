@@ -80,9 +80,13 @@ jobs:
         run: |
           set -euo pipefail
           check_app() {
-            local app="$1" bin="$1/Contents/MacOS/reroute" archs
-            archs=" $(lipo -archs "$bin") "
-            echo "architectures of $bin:$archs"
+            local app="$1"
+            local bin="$1/Contents/MacOS/reroute"
+            local archs
+
+            archs="$(lipo -archs "$bin")"
+            echo "architectures of $bin: $archs"
+
             [[ "$archs" == "arm64" ]] || {
               echo "::error::$bin is not arm64-only (found: $archs)"
               exit 1
@@ -161,7 +165,7 @@ jobs:
           | Fedora, openSUSE | \`Reroute-*.x86_64.rpm\` |
           | Any Linux | \`Reroute_*_amd64.AppImage\` |
           | Windows | \`Reroute_*_x64-setup.exe\` or \`Reroute_*_x64_en-US.msi\` |
-          | macOS, Apple Silicon (M1 and later) and Intel | \`Reroute_*_universal.dmg\` |
+          | macOS, Apple Silicon (M1 and later) | `Reroute_*.dmg` |
 
           The installers are not signed with a paid certificate. Windows SmartScreen asks for confirmation. On macOS, open the app once with right-click › Open, or on macOS 15 and later click *Open Anyway* in System Settings › Privacy & Security.
 
