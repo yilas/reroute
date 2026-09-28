@@ -34,8 +34,7 @@ jobs:
             os: windows-latest
             args: ""
             bundle: target/release/bundle
-          # One universal build: a single .dmg that runs natively on Apple
-          # Silicon (M-series) and on Intel Macs.
+          # ARM64-only macOS build for Apple Silicon Macs.
           - name: macos-arm64
             os: macos-latest
             args: "--target aarch64-apple-darwin"
@@ -67,10 +66,10 @@ jobs:
         shell: bash
         env:
           ARGS: ${{ matrix.args }}
-        # $ARGS unquoted on purpose: it holds zero or two words.
+        # $ARGS is unquoted on purpose because it may contain multiple CLI arguments.
         run: npx tauri build $ARGS
       # Fail the release rather than ship a Mac build that will not open:
-      # the binary must contain both architectures and the bundle must carry
+      # the binary must be ARM64-only and the bundle must carry
       # a valid (ad-hoc) signature, which Apple Silicon requires.
       - name: Verify the macOS bundle
         if: runner.os == 'macOS'
